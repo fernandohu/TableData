@@ -23,7 +23,6 @@ $grid->setHeader([
     'check'           => false,
     'category_id'     => 'Id',
     'dsc_name'        => 'Nome da categoria',
-    'dsc_description' => 'Descrição',
     'bit_active'      => 'Ativo',
 ]);
 $grid->setColumnSizes(['60', '60', '*', '5']);
