@@ -25,7 +25,7 @@ $grid->setHeader([
     'dsc_name'        => 'Nome da categoria',
     'bit_active'      => 'Ativo',
 ]);
-$grid->setColumnSizes(['60', '60', '*', '5']);
+$grid->setColumnSizes(['60', '60', '*', '20']);
 $grid->enableOrdering([false, true, true, true]);
 $grid->setOrderingColumn('dsc_name');
 $grid->setOrder(Table::DIRECTION_DOWN);
