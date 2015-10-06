@@ -3,7 +3,7 @@ Use this project if you need to display data in HTML table format.
 
 ## Features
 * HTML conformant: it uses THEAD, TH, TBODY, TR, TD to build the table.
-* Column ordering: a little icon (arrow down and arrow up) can be displayed in the columns headers.
+* Column ordering: a little icon (arrow down and arrow up) can be displayed in the columns headers and a link is created with the url schema provided.
 * Column size: columns sizes can be set with a value. Use "*" to make it expand to the visible area.
 * Cell filter: a filter function can be used to change data before displaying it.
 * Built-in filters:
