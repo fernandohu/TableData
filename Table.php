@@ -60,6 +60,11 @@ class Table
     protected $orderingColumn;
 
     /**
+     * @var string
+     */
+    protected $id = 'container';
+
+    /**
      * Direction constants
      */
     const DIRECTION_UP = 'desc';
@@ -384,7 +389,7 @@ class Table
     protected function renderHeader()
     {
         $content = '';
-        $content .= $this->layout->beforeTable();
+        $content .= $this->layout->beforeTable($this->id);
         $content .= $this->layout->beforeHeader();
 
         $currentCell = 0;
@@ -471,7 +476,7 @@ class Table
     protected function renderFooter()
     {
         $content = $this->layout->afterTableBody();
-        $content .= $this->layout->afterTable();
+        $content .= $this->layout->afterTable($this->id);
 
         return $content;
     }

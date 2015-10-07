@@ -6,18 +6,20 @@ use fhu\TableData\Table;
 class Builtin implements LayoutInterface
 {
     /**
+     * @param string $id
      * @return string
      */
-    function beforeTable()
+    function beforeTable($id)
     {
-        $content = '<table class="table">';
+        $content = '<table class="table" id="' . $id .'">';
         return $content;
     }
 
     /**
+     * @param string $id
      * @return string
      */
-    function afterTable()
+    function afterTable($id)
     {
         $content = '</table>';
         return $content;

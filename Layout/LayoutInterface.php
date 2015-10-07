@@ -3,8 +3,17 @@ namespace fhu\TableData\Layout;
 
 interface LayoutInterface
 {
-    function beforeTable();
-    function afterTable();
+    /**
+     * @param string $id
+     * @return string
+     */
+    function beforeTable($id);
+
+    /**
+     * @param string $id
+     * @return string
+     */
+    function afterTable($id);
 
     function beforeHeader();
     function afterHeader();
