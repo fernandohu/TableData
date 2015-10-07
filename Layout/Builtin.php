@@ -1,96 +1,107 @@
 <?php
 namespace fhu\TableData\Layout;
 
-use fhu\TableData\Table;
+use fhu\TableData\Params\Body,
+    fhu\TableData\Params\Header,
+    fhu\TableData\Params\HeaderCell,
+    fhu\TableData\Params\Row,
+    fhu\TableData\Params\RowCell,
+    fhu\TableData\Table,
+    fhu\TableData\Params\Table as TableParam;
 
-class Builtin implements LayoutInterface
+class Builtin extends LayoutAbstract
 {
+    public static $renderLineCounter = 0;
+
     /**
-     * @param string $id
+     * @param TableParam $params
      * @return string
      */
-    function beforeTable($id)
+    function beforeTable(TableParam $params)
     {
-        $content = '<table class="table" id="' . $id .'">';
+        $content = '';
+
+        $id = $this->config->getId();
+        require(__DIR__ . '/../javascript/selectline.php');
+
+        $content .= '<table class="table table-hover" id="' . $id . '">';
         return $content;
     }
 
     /**
-     * @param string $id
+     * @param TableParam $params
      * @return string
      */
-    function afterTable($id)
+    function afterTable(TableParam $params)
     {
         $content = '</table>';
         return $content;
     }
 
     /**
+     * @param Header $params
      * @return string
      */
-    function beforeHeader()
+    function beforeHeader(Header $params)
     {
         $content = '<thead><tr class="header_row">';
         return $content;
     }
 
     /**
+     * @param Header $params
      * @return string
      */
-    function afterHeader()
+    function afterHeader(Header $params)
     {
         $content = '</tr></thead>';
         return $content;
     }
 
     /**
+     * @param Body $params
      * @return string
      */
-    function beforeTableBody()
+    function beforeTableBody(Body $params)
     {
         $content = '<tbody>';
         return $content;
     }
 
     /**
+     * @param Body $params
      * @return string
      */
-    function afterTableBody()
+    function afterTableBody(Body $params)
     {
         $content = '</tbody>';
         return $content;
     }
 
     /**
-     * @param int $columnIndex
-     * @param bool|null $order True for ASC, False for DESC and Null for NONE
-     * @param string $width
-     * @param string $link
+     * @param HeaderCell $params
      * @return string
      */
-    function beforeHeaderCell($columnIndex, $order, $width, $link = '')
+    function beforeHeaderCell(HeaderCell $params)
     {
-        $content = '<th class="header_cell" width="' . $width . '">';
+        $content = '<th class="header_cell" width="' . $params->width . '">';
 
-        if (!is_null($link)) {
-            $content .= '<a href="' . $link . '">';
+        if (!is_null($params->link)) {
+            $content .= '<a href="' . $params->link . '">';
         }
 
         return $content;
     }
 
     /**
-     * @param int $columnIndex
-     * @param bool|null $order True for ASC, False for DESC and Null for NONE
-     * @param string $width
-     * @param string $link
+     * @param HeaderCell $params
      * @return string
      */
-    function afterHeaderCell($columnIndex, $order, $width, $link = '')
+    function afterHeaderCell(HeaderCell $params)
     {
         $content = '';
 
-        switch ($order)
+        switch ($params->order)
         {
             case Table::DIRECTION_DOWN:
                 $content .= '&#x25BC;';
@@ -109,46 +120,42 @@ class Builtin implements LayoutInterface
     }
 
     /**
-     * @param int $rowIndex
-     * @return mixed
+     * @param Row $params
      * @return string
      */
-    function beforeRow($rowIndex)
+    function beforeRow(Row $params)
     {
+        self::$renderLineCounter++;
+
         $content = '<tr class="body_row">';
         return $content;
     }
 
     /**
-     * @param int $rowIndex
-     * @return mixed
+     * @param Row $params
      * @return string
      */
-    function afterRow($rowIndex)
+    function afterRow(Row $params)
     {
         $content = '</tr>';
         return $content;
     }
 
     /**
-     * @param int $rowIndex
-     * @param int $columnIndex
-     * @param string $width
+     * @param RowCell $params
      * @return string
      */
-    function beforeRowCell($rowIndex, $columnIndex, $width)
+    function beforeRowCell(RowCell $params)
     {
-        $content = '<td class="body_cell" width="' . $width . '">';
+        $content = '<td class="body_cell" width="' . $params->width . '" onclick="selectLine_' . $this->config->getId() . '(this);">';
         return $content;
     }
 
     /**
-     * @param int $rowIndex
-     * @param int $columnIndex
-     * @param string $width
+     * @param RowCell $params
      * @return string
      */
-    function afterRowCell($rowIndex, $columnIndex, $width)
+    function afterRowCell(RowCell $params)
     {
         $content = '</td>';
         return $content;

@@ -1,71 +1,84 @@
 <?php
 namespace fhu\TableData\Layout;
 
+use fhu\TableData\Params\Body;
+use fhu\TableData\Params\Header;
+use fhu\TableData\Params\HeaderCell;
+use fhu\TableData\Params\Row;
+use fhu\TableData\Params\RowCell;
+use fhu\TableData\Params\Table;
+
 interface LayoutInterface
 {
     /**
-     * @param string $id
+     * @param Table $params
      * @return string
      */
-    function beforeTable($id);
+    function beforeTable(Table $params);
 
     /**
-     * @param string $id
+     * @param Table $params
      * @return string
      */
-    function afterTable($id);
-
-    function beforeHeader();
-    function afterHeader();
-
-    function beforeTableBody();
-    function afterTableBody();
+    function afterTable(Table $params);
 
     /**
-     * @param int $columnIndex
-     * @param bool|null $order True for ASC, False for DESC and Null for NONE
-     * @param string $width
-     * @param string $link
+     * @param Header $params
      * @return string
      */
-    function beforeHeaderCell($columnIndex, $order, $width, $link = '');
+    function beforeHeader(Header $params);
 
     /**
-     * @param int $columnIndex
-     * @param bool|null $order True for ASC, False for DESC and Null for NONE
-     * @param string $width
-     * @param string $link
+     * @param Header $params
      * @return string
      */
-    function afterHeaderCell($columnIndex, $order, $width, $link = '');
+    function afterHeader(Header $params);
 
     /**
-     * @param int $rowIndex
-     * @return mixed
+     * @param Body $params
      * @return string
      */
-    function beforeRow($rowIndex);
+    function beforeTableBody(Body $params);
 
     /**
-     * @param int $rowIndex
-     * @return mixed
+     * @param Body $params
      * @return string
      */
-    function afterRow($rowIndex);
+    function afterTableBody(Body $params);
 
     /**
-     * @param int $rowIndex
-     * @param int $columnIndex
-     * @param string $width
+     * @param HeaderCell $params
      * @return string
      */
-    function beforeRowCell($rowIndex, $columnIndex, $width);
+    function beforeHeaderCell(HeaderCell $params);
 
     /**
-     * @param int $rowIndex
-     * @param int $columnIndex
-     * @param string $width
+     * @param HeaderCell $params
      * @return string
      */
-    function afterRowCell($rowIndex, $columnIndex, $width);
+    function afterHeaderCell(HeaderCell $params);
+
+    /**
+     * @param Row $params
+     * @return string
+     */
+    function beforeRow(Row $params);
+
+    /**
+     * @param Row $params
+     * @return string
+     */
+    function afterRow(Row $params);
+
+    /**
+     * @param RowCell $params
+     * @return string
+     */
+    function beforeRowCell(RowCell $params);
+
+    /**
+     * @param RowCell $params
+     * @return string
+     */
+    function afterRowCell(RowCell $params);
 }

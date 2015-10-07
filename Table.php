@@ -5,7 +5,7 @@ use fhu\TableData\Exception\EmptyHeadersException,
     fhu\TableData\Exception\InvalidHeadersException,
     fhu\TableData\Exception\LinkParameterNotSetException;
 use fhu\TableData\Layout\LayoutInterface;
-use fhu\TableData\Layout\LayoutManager;
+use fhu\TableData\Model\LayoutManager;
 use fhu\TableData\Model\Config;
 
 class Table

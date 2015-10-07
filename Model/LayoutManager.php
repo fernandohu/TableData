@@ -1,10 +1,17 @@
 <?php
-namespace fhu\TableData\Layout;
+namespace fhu\TableData\Model;
 
 use fhu\TableData\Exception\HeaderDoesNoMatchDataColumnCount;
 use fhu\TableData\Exception\HeaderNotSetException;
-use fhu\TableData\Model\Config;
+use fhu\TableData\Layout\LayoutAbstract;
+use fhu\TableData\Layout\LayoutInterface;
+use fhu\TableData\Params\Body;
+use fhu\TableData\Params\Header;
+use fhu\TableData\Params\HeaderCell;
+use fhu\TableData\Params\Row;
+use fhu\TableData\Params\RowCell;
 use fhu\TableData\Table;
+use fhu\TableData\Params\Table as TableParam;
 
 class LayoutManager
 {
@@ -14,7 +21,7 @@ class LayoutManager
     protected $config;
 
     /**
-     * @var LayoutInterface
+     * @var LayoutAbstract
      */
     protected $layout;
 
@@ -36,6 +43,7 @@ class LayoutManager
     public function render()
     {
         $this->config->checkConfiguration();
+        $this->layout->setConfig($this->config);
 
         $content = $this->renderHeader();
         $content .= $this->renderBody();
@@ -46,9 +54,14 @@ class LayoutManager
 
     protected function renderHeader()
     {
+        $tableParam = new TableParam();
+        $headerParam = new Header();
+        $bodyParam = new Body();
+        $headerCellParam = new HeaderCell();
+
         $content = '';
-        $content .= $this->layout->beforeTable($this->config->getId());
-        $content .= $this->layout->beforeHeader();
+        $content .= $this->layout->beforeTable($tableParam);
+        $content .= $this->layout->beforeHeader($headerParam);
 
         $currentCell = 0;
         foreach ($this->config->getHeader() as $value) {
@@ -69,21 +82,28 @@ class LayoutManager
                 }
             }
 
-            $content .= $this->layout->beforeHeaderCell($currentCell, $orderingColumnOrder, $width, $link);
+            $headerCellParam->columnIndex = $currentCell;
+            $headerCellParam->link = $link;
+            $headerCellParam->order = $orderingColumnOrder;
+            $headerCellParam->width = $width;
+
+            $content .= $this->layout->beforeHeaderCell($headerCellParam);
             $content .= $this->renderValue($rowId, $value, $currentCell, -1, true);
-            $content .= $this->layout->afterHeaderCell($currentCell, $orderingColumnOrder, $width, $link);
+            $content .= $this->layout->afterHeaderCell($headerCellParam);
 
             $currentCell++;
         }
 
-        $content .= $this->layout->afterHeader();
-        $content .= $this->layout->beforeTableBody();
+        $content .= $this->layout->afterHeader($headerParam);
+        $content .= $this->layout->beforeTableBody($bodyParam);
 
         return $content;
     }
 
     protected function renderBody()
     {
+        $rowParam = new Row();
+
         $content         = '';
         $currentRow      = 0;
         $headerCellCount = count($this->config->getHeader());
@@ -99,7 +119,9 @@ class LayoutManager
                 throw new HeaderDoesNoMatchDataColumnCount('Number of header cells are different of body row cells at line ' . $currentRow);
             }
 
-            $content .= $this->layout->beforeRow($currentRow);
+            $rowParam->rowIndex = $currentCell;
+
+            $content .= $this->layout->beforeRow($rowParam);
 
             /**
              * @var mixed $cell
@@ -109,7 +131,7 @@ class LayoutManager
                 $currentCell++;
             }
 
-            $content .= $this->layout->afterRow($currentRow);
+            $content .= $this->layout->afterRow($rowParam);
 
             $currentRow++;
         }
@@ -119,22 +141,31 @@ class LayoutManager
 
     protected function renderCell($value, $currentRow, $currentCell)
     {
+        $rowCellParam = new RowCell();
+
         $content = '';
 
         $rowId = $this->config->getRowId($currentCell);
         $width = $this->config->getColumnSize($rowId);
 
-        $content .= $this->layout->beforeRowCell($currentRow, $currentCell, $width);
+        $rowCellParam->width = $width;
+        $rowCellParam->columnIndex = $currentCell;
+        $rowCellParam->rowIndex = $currentRow;
+
+        $content .= $this->layout->beforeRowCell($rowCellParam);
         $content .= $this->renderValue($rowId, $value, $currentCell, $currentRow);
-        $content .= $this->layout->afterRowCell($currentRow, $currentCell, $width);
+        $content .= $this->layout->afterRowCell($rowCellParam);
 
         return $content;
     }
 
     protected function renderFooter()
     {
-        $content = $this->layout->afterTableBody();
-        $content .= $this->layout->afterTable($this->config->getId());
+        $tableParam = new \fhu\TableData\Params\Table();
+        $bodyParam = new Body();
+
+        $content = $this->layout->afterTableBody($bodyParam);
+        $content .= $this->layout->afterTable($tableParam);
 
         return $content;
     }
