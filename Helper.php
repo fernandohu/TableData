@@ -56,6 +56,11 @@ class Helper
         return $result;
     }
 
+    /**
+     * @param array $data
+     * @param $valueToAdd
+     * @return array
+     */
     public static function addBefore(array $data, $valueToAdd)
     {
         $result = [];
