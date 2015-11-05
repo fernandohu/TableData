@@ -1,14 +1,14 @@
 <?php
 namespace fhu\TableData\Filters;
 
+use fhu\TableData\Filters\Struct\CallbackInfo;
+
 interface FilterInterface
 {
     /**
      * @param string $value
-     * @param int $currentCell
-     * @param int $currentRow
-     * @param mixed $userData
+     * @param CallbackInfo $info
      * @return string
      */
-    function apply($value, $currentCell, $currentRow, $userData);
+    function apply($value, CallbackInfo $info);
 }

@@ -3,6 +3,7 @@ namespace fhu\TableData\Model;
 
 use fhu\TableData\Exception\HeaderDoesNoMatchDataColumnCount;
 use fhu\TableData\Exception\HeaderNotSetException;
+use fhu\TableData\Filters\Struct\CallbackInfo;
 use fhu\TableData\Layout\LayoutAbstract;
 use fhu\TableData\Layout\LayoutInterface;
 use fhu\TableData\Params\Body;
@@ -184,7 +185,15 @@ class LayoutManager
                 $filterCallback = $filter['callable'];
                 $userData = $filter['data'];
 
-                $content .= $filterCallback($value, $currentCell, $currentRow, $userData);
+                $callbackInfo = new CallbackInfo();
+                $callbackInfo->rowIndex = $currentRow;
+                $callbackInfo->cellIndex = $currentCell;
+                $callbackInfo->id = $rowId;
+                $callbackInfo->userData = $userData;
+
+                $content .= $filterCallback($value, $callbackInfo);
+
+                unset($callbackInfo);
             }
         } else {
             $content .= $value;

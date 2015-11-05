@@ -1,17 +1,19 @@
 <?php
 namespace fhu\TableData\Filters;
 
+use fhu\TableData\Filters\Struct\CallbackInfo;
+
 class CheckAll implements FilterInterface
 {
     /**
      * @param string $value
-     * @param int $currentCell
-     * @param int $currentRow
-     * @param mixed $userData
+     * @param CallbackInfo $info
      * @return string
      */
-    public function apply($value, $currentCell, $currentRow, $userData)
+    function apply($value, CallbackInfo $info)
     {
+        $userData = $info->userData;
+
         if (isset($userData['id'])) {
             $id = $userData['id'];
         } else {

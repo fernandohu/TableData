@@ -1,26 +1,60 @@
 <?php
 namespace fhu\TableData\Filters;
 
+use fhu\TableData\Filters\Struct\CallbackInfo;
+
 class ShowMore implements FilterInterface
 {
     /**
+     * @var string
+     */
+    protected $url;
+
+    /**
      * @param string $value
-     * @param int $currentCell
-     * @param int $currentRow
-     * @param mixed $userData
+     * @param CallbackInfo $info
      * @return string
      */
-    public function apply($value, $currentCell, $currentRow, $userData)
+    function apply($value, CallbackInfo $info)
     {
         $onclick = '';
         $href = '';
-        if (isset($userData['link'])) {
-            $onclick = ' onclick="location.href=\'' . $userData['link'] . '\'"';
-            $href = $userData['link'];
+        if ($this->getUrl($info)) {
+            $onclick = ' onclick="location.href=\'' . $this->getUrl($info) . '\'"';
+            $href = $this->getUrl($info);
         }
 
-        $content = '<div style="float:right; cursor:pointer;" class="glyphicon glyphicon-zoom-in"' . $onclick . '></div><a href="' . $href . '">' . $value . '</a>';
+        $content = '
+                    <a href="' . $href . '">
+                        ' . $value . '
+                        <div style="float:right; cursor:pointer;" class="glyphicon glyphicon-zoom-in"' . $onclick . ' />
+                        </div>
+                    </a>
+';
 
         return $content;
+    }
+
+    /**
+     * @param CallbackInfo $info
+     * @return string
+     */
+    public function getUrl(CallbackInfo $info = null)
+    {
+        $url = $this->url;
+
+        if ($info) {
+            $url = str_replace('#ID#', urlencode($info->id), $url);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }

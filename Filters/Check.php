@@ -1,16 +1,16 @@
 <?php
 namespace fhu\TableData\Filters;
 
+use fhu\TableData\Filters\Struct\CallbackInfo;
+
 class Check implements FilterInterface
 {
     /**
      * @param string $value
-     * @param int $currentCell
-     * @param int $currentRow
-     * @param mixed $userData
+     * @param CallbackInfo $info
      * @return string
      */
-    public function apply($value, $currentCell, $currentRow, $userData)
+    function apply($value, CallbackInfo $info)
     {
         if (isset($userData['id'])) {
             $id = $userData['id'];
@@ -19,11 +19,11 @@ class Check implements FilterInterface
         }
 
         if (isset($userData['useCellIndex'])) {
-            $id .= $currentCell;
+            $id .= $info->cellIndex;
         }
 
         if (isset($userData['useRowIndex'])) {
-            $id .= $currentRow;
+            $id .= $info->rowIndex;
         }
 
         if (isset($userData['name'])) {
