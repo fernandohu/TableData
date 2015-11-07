@@ -10,4 +10,6 @@ class CallbackInfo
     public $id;
 
     public $userData;
+
+    public $rowValues;
 }

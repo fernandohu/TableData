@@ -65,7 +65,8 @@ class LayoutManager
         $content .= $this->layout->beforeHeader($headerParam);
 
         $currentCell = 0;
-        foreach ($this->config->getHeader() as $value) {
+        $headerValues = $this->config->getHeader();
+        foreach ($headerValues as $value) {
             $rowId = $this->config->getRowId($currentCell);
             $width = $this->config->getColumnSize($rowId);
 
@@ -89,7 +90,7 @@ class LayoutManager
             $headerCellParam->width = $width;
 
             $content .= $this->layout->beforeHeaderCell($headerCellParam);
-            $content .= $this->renderValue($rowId, $value, $currentCell, -1, true);
+            $content .= $this->renderValue($rowId, $value, $currentCell, -1, true, $headerValues);
             $content .= $this->layout->afterHeaderCell($headerCellParam);
 
             $currentCell++;
@@ -128,7 +129,7 @@ class LayoutManager
              * @var mixed $cell
              */
             foreach ($row as $value) {
-                $content .= $this->renderCell($value, $currentRow, $currentCell);
+                $content .= $this->renderCell($value, $currentRow, $currentCell, $row);
                 $currentCell++;
             }
 
@@ -140,7 +141,7 @@ class LayoutManager
         return $content;
     }
 
-    protected function renderCell($value, $currentRow, $currentCell)
+    protected function renderCell($value, $currentRow, $currentCell, &$row)
     {
         $rowCellParam = new RowCell();
 
@@ -154,7 +155,7 @@ class LayoutManager
         $rowCellParam->rowIndex = $currentRow;
 
         $content .= $this->layout->beforeRowCell($rowCellParam);
-        $content .= $this->renderValue($rowId, $value, $currentCell, $currentRow);
+        $content .= $this->renderValue($rowId, $value, $currentCell, $currentRow, false, $row);
         $content .= $this->layout->afterRowCell($rowCellParam);
 
         return $content;
@@ -171,7 +172,7 @@ class LayoutManager
         return $content;
     }
 
-    protected function renderValue($rowId, $value, $currentCell, $currentRow, $header = false)
+    protected function renderValue($rowId, $value, $currentCell, $currentRow, $header = false, &$row)
     {
         $content = '';
 
@@ -189,6 +190,7 @@ class LayoutManager
                 $callbackInfo->rowIndex = $currentRow;
                 $callbackInfo->cellIndex = $currentCell;
                 $callbackInfo->id = $rowId;
+                $callbackInfo->rowValues = &$row;
                 $callbackInfo->userData = $userData;
 
                 $content .= $filterCallback($value, $callbackInfo);

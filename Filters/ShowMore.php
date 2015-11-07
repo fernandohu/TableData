@@ -11,6 +11,11 @@ class ShowMore implements FilterInterface
     protected $url;
 
     /**
+     * @var int
+     */
+    protected $idIndex = 0;
+
+    /**
      * @param string $value
      * @param CallbackInfo $info
      * @return string
@@ -44,7 +49,7 @@ class ShowMore implements FilterInterface
         $url = $this->url;
 
         if ($info) {
-            $url = str_replace('#ID#', urlencode($info->id), $url);
+            $url = str_replace('#ID#', urlencode($info->rowValues[$this->getIdIndex()]), $url);
         }
 
         return $url;
@@ -56,5 +61,21 @@ class ShowMore implements FilterInterface
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdIndex()
+    {
+        return $this->idIndex;
+    }
+
+    /**
+     * @param int $idIndex
+     */
+    public function setIdIndex($idIndex)
+    {
+        $this->idIndex = $idIndex;
     }
 }
